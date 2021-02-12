@@ -1,0 +1,5 @@
+package controllerUser
+
+func CtrConsultUser() {
+
+}
