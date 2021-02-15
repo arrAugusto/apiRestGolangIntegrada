@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	Consult "../models/modelUser"
+	Consult "../../models/modelUser"
 )
 
 func CtrConsultUser(w http.ResponseWriter, r *http.Request) {

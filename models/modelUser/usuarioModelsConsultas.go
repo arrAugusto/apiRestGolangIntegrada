@@ -1,44 +1,41 @@
 package modelUser
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 
+	StructUser "../../structures/structuresUser"
 	Conecta "../databaseSQL"
 	//StructModUser "../structures/structUser"
 )
 
-func ConsultaUsuarios(w http.ResponseWriter, r *http.Request) {
+func ConsultaUsuarios() ([]StructUser.Usuario, error) {
 
+	usuarios := []StructUser.Usuario{}
 	//declarando string para guardar los datos de la consulta
 	Conecta.ConectionSQL()
 	defer Conecta.ConectionSQL().Close()
 	//structModelUs := StructModUser.DataConsultaUSer{}
 	//consulta query
-	names := make([]int, 0)
-
+	//	names := make([]int, 0)
 	tsql := fmt.Sprintf("EXEC [spMostrarUsuarios]")
 	rows, err := Conecta.ConectionSQL().Query(tsql)
-
+	var user StructUser.Usuario
 	if err != nil {
 		fmt.Println("Error reading rows: " + err.Error())
-		return
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 
-		var id int
-		err := rows.Scan(&id)
-		fmt.Println(err)
+		//	var id int
+		err := rows.Scan(&user.Id)
 		if err != nil {
 			fmt.Println("Error reading rows: " + err.Error())
-			return
+			return nil, err
 		}
-		names = append(names, id)
+		usuarios = append(usuarios, user)
+		//	names = append(names, id)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(rows)
+	return usuarios, nil
 
 }
