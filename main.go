@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	ConsUSer "./controllers/controllerUser"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	//ConsUSer.ConsultaUsuarios()
-	fmt.Println("hola mundo mi server")
-	http.HandleFunc("/usuarios", ConsUSer.CtrConsultUser)
-	http.ListenAndServe(":8070", nil)
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/usuarios", ConsUSer.CtrConsultUser).Methods("POST")
+	log.Fatal(http.ListenAndServe(":3000", router))
 }

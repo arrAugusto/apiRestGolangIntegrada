@@ -28,7 +28,6 @@ func ConectionSQL() *sql.DB {
 	if err != nil {
 		log.Fatal("Open connection failed:", err.Error())
 	}
-	fmt.Printf("Connected!\n")
 	return conn
 
 }
