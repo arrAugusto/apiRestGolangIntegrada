@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	Auth "../../authentication"
 	Consult "../../models/modelUser"
-	StructUser "../../structures/structuresUser"
 )
 
 /**
@@ -46,6 +46,8 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 
 	//TOMANDO CONTRASEÑA DEL USUARIO
 	usuarioData, err := Consult.MdlConsultaUsuarios(usuarioCast, passwordCast)
+	JWTResponse := Auth.CrearJWTUser(usuarioData)
+
 	if err != nil {
 		fmt.Printf("Error obteniendo contactos: %v", err)
 		return
@@ -53,9 +55,12 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 
 	//	CrearJWTUser(usuarioData)
 	if len(usuarioData) == 1 {
-		responseMovies(w, 200, usuarioData)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(200)
+		json.NewEncoder(w).Encode(JWTResponse)
 
 	} else {
+
 		var message UserNotFound
 		message.Msg = "Usuario o Contraseña no existe"
 		w.Header().Set("Content-Type", "application/json")
@@ -63,10 +68,4 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(message)
 		return
 	}
-}
-
-func responseMovies(w http.ResponseWriter, status int, dataUser []StructUser.Usuario) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(dataUser)
 }
