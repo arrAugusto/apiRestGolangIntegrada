@@ -10,6 +10,7 @@ import (
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
+
 	router.HandleFunc("/usuarios", ConsUSer.CtrConsultUser).Methods("POST")
-	log.Fatal(http.ListenAndServe(":3000", router))
+	log.Fatal(http.ListenAndServe(":3001", router))
 }

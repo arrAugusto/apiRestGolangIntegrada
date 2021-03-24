@@ -8,6 +8,7 @@ import (
 
 	Auth "../../authentication"
 	Consult "../../models/modelUser"
+	packetJWT "github.com/dgrijalva/jwt-go"
 )
 
 /**
@@ -17,6 +18,7 @@ import (
 type DataRequerida struct {
 	UsuarioReq  int    `json: usuarioReq`
 	PasswordReq string `json: passwordReq`
+	packetJWT.StandardClaims
 }
 
 type UserNotFound struct {
@@ -46,6 +48,7 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 
 	//TOMANDO CONTRASEÑA DEL USUARIO
 	usuarioData, err := Consult.MdlConsultaUsuarios(usuarioCast, passwordCast)
+
 	JWTResponse := Auth.CrearJWTUser(usuarioData)
 
 	if err != nil {

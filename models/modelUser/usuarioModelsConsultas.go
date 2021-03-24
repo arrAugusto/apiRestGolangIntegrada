@@ -44,6 +44,7 @@ func MdlConsultaUsuarios(UserIng int, PwIng string) ([]StructUser.Usuario, error
 	if len(usuarios) == 1 && PwIng == usuarios[0].Password {
 		PwIng = ""
 		usuarios[0].Password = ""
+
 		if err != nil {
 			fmt.Println("No se encontro el usuario: " + err.Error())
 			return nil, err
