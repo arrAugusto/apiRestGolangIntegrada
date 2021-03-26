@@ -7,7 +7,7 @@ package structuresUser
 type Usuario struct {
 	IdUser         int    `json: id`
 	Usuario        int    `json: usuario`
-	Password       string `json: password`
+	Password       string `json: password, omitempty`
 	Nombre         string `json: nombre`
 	Apellidos      string `json: apellidos`
 	Fecha_creacion string `json: fechaCreacion`
