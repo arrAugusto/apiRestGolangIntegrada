@@ -49,8 +49,6 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 	//TOMANDO CONTRASEÑA DEL USUARIO
 	usuarioData, err := Consult.MdlConsultaUsuarios(usuarioCast, passwordCast)
 
-	JWTResponse := Auth.CrearJWTUser(usuarioData)
-
 	if err != nil {
 		fmt.Printf("Error obteniendo contactos: %v", err)
 		return
@@ -58,12 +56,13 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 
 	//	CrearJWTUser(usuarioData)
 	if len(usuarioData) == 1 {
+
+		JWTResponse := Auth.CrearJWTUser(usuarioData)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(JWTResponse)
-
+		return
 	} else {
-
 		var message UserNotFound
 		message.Msg = "Usuario o Contraseña no existe"
 		w.Header().Set("Content-Type", "application/json")

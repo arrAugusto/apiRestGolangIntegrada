@@ -17,6 +17,7 @@ var (
 	publicKey  *rsa.PublicKey
 )
 
+//Nuevo objeto a partir del recibido en el retorno y validacion del login
 type JWTAuth struct {
 	IdUserJWT         int    `json: idJWT`
 	NombreJWT         string `json: nombreJWT`
@@ -31,14 +32,19 @@ type JWTAuth struct {
 	EstadoJWT         int    `json: estadoJWT`
 	DepartamentosJWT  string `json: departamentosJWT`
 }
+
+//Objeto que guarda el JWT a retornar
 type Claim struct {
 	JWTAuth `json: myUser`
 	packetJWT.StandardClaims
 }
+
+//Array que retorna el objeto JWT ala vista
 type JWTRespStarting struct {
 	TokenStarting string `json: tokenStarting`
 }
 
+//inicializando los metodos a utilizar
 var JwtResp []JWTAuth
 var tokenStart []JWTRespStarting
 
@@ -47,10 +53,11 @@ var tokenStart []JWTRespStarting
 CREANDO JWT SEGUN EL LA STRUCTURA DEL JWTAUTH
 **/
 func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
+	//haciendo publico el uso del objeto JWTAuth / JWTRespStarting
 	var jwt JWTAuth
 	var jwtStart JWTRespStarting
+	//Haciendo set al objeto JWTAuth
 	jwt.IdUserJWT = data[0].IdUser
-
 	jwt.NombreJWT = data[0].Nombre
 	jwt.ApellidosJWT = data[0].Apellidos
 	jwt.Fecha_creacionJWT = data[0].Fecha_creacion
@@ -62,24 +69,29 @@ func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	jwt.FotoJWT = data[0].Foto
 	jwt.EstadoJWT = data[0].Estado
 	jwt.DepartamentosJWT = data[0].Departamentos
-
+	//Cargando variables al objeto
 	JwtResp = append(JwtResp, jwt)
+	//Invocando el metodo que crea el JWT
 	jwtGenerado := GenerateJWT(JwtResp, []Claim{})
-
+	//Asignando string JWT a el objeto a retornar como array
 	jwtStart.TokenStarting = jwtGenerado
+	//Cargando al metodo jwt
 	TokenStarting := append(tokenStart, jwtStart)
-
+	//Retornando el metodo con el que se logueara el usuario
 	return TokenStarting
 
 }
 
+/**
+*	CREANDO EL JWT
+**/
 func GenerateJWT(data []JWTAuth, claim []Claim) string {
-
+	//utilizando el metodo claim y crando el jwt
 	claims := Claim{
 		JWTAuth: data[0],
 		StandardClaims: packetJWT.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
-			Issuer:    "taller",
+			Issuer:    "Incio de sesión",
 		},
 	}
 	token := packetJWT.NewWithClaims(packetJWT.SigningMethodRS256, claims)
@@ -92,8 +104,10 @@ func GenerateJWT(data []JWTAuth, claim []Claim) string {
 	return result
 }
 
+/**
+*	CARGANDO LOS FICHEROS PRIVADOS Y PUBLICOS PARA HACER EL PARSEO DEL JWT
+**/
 func init() {
-	//
 	privateBytes, err := ioutil.ReadFile("authentication/private.rsa")
 	if err != nil {
 		log.Fatal("No se pudo leer el archivo privado")
