@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	IngresosGene "./controllers/controllerIngGeneral"
 	ConsUSer "./controllers/controllerUser"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -16,5 +17,9 @@ func main() {
 	origins := handlers.AllowedOrigins([]string{"*"})
 	methods := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "DELETE", "PUT"})
 	router.HandleFunc("/usuarios", ConsUSer.CtrConsultUser).Methods("POST")
+
+	//INGRESO NUEVOS DE MERCADERIA
+	router.HandleFunc("/ingresosGeneral", IngresosGene.CtrIngGeneral).Methods("POST")
+
 	http.ListenAndServe(":3001", handlers.CORS(headers, origins, methods)(router))
 }
