@@ -26,7 +26,7 @@ type UserNotFound struct {
 }
 
 /**
-*	CONTROLADORA EN EL CUAL SE CASTEA LOS DATOS Y SE RESPONDE AL QUE CONSUME EL API REST
+*	CONTROLADOR EN EL CUAL SE CASTEA LOS DATOS Y SE RESPONDE AL QUE CONSUME EL API REST
 **/
 func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 	// Read body

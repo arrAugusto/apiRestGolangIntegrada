@@ -20,6 +20,12 @@ func main() {
 
 	//INGRESO NUEVOS DE MERCADERIA
 	router.HandleFunc("/ingresosGeneral", IngresosGene.CtrIngGeneral).Methods("POST")
+	router.HandleFunc("/ingNewProductGeneral", IngresosGene.CtrNewProductGeneral).Methods("POST")
+
+	//SUBIENDO IMAGEN O PDF DE LA CERTIFICACION O POLIZA, SOPORTE LEGAL DE LA DESCARGA.
+	//GESTOR DE DOCUMENTOS
+	router.HandleFunc("/ingresosGeneralUpload", IngresosGene.CtrUploadSoportLegal).Methods("POST")
+	router.HandleFunc("/docSopport", IngresosGene.CtrDowloadSoportLegal)
 
 	http.ListenAndServe(":3001", handlers.CORS(headers, origins, methods)(router))
 }

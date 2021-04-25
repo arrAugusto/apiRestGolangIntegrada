@@ -8,6 +8,7 @@ import (
 	"time"
 
 	StructUser "../structures/structuresUser"
+	"github.com/dgrijalva/jwt-go"
 	packetJWT "github.com/dgrijalva/jwt-go"
 )
 
@@ -113,6 +114,7 @@ func init() {
 		log.Fatal("No se pudo leer el archivo privado")
 	}
 	publicBytes, err := ioutil.ReadFile("authentication/public.rsa.pub")
+
 	if err != nil {
 		log.Fatal("No se pudo leer el archivo publico")
 	}
@@ -127,4 +129,17 @@ func init() {
 		log.Fatal("No se puede hacer el parse a publickey")
 
 	}
+}
+
+//LEYENDO EL PAYLOAD DEL JSON WEB TOKEN
+func ReadPyloadJWT(tokenString string) jwt.MapClaims {
+
+	token, err := jwt.Parse(tokenString, nil)
+	if token == nil {
+		fmt.Println("Error validate " + err.Error())
+	}
+	claims, _ := token.Claims.(jwt.MapClaims)
+
+	return claims
+
 }
