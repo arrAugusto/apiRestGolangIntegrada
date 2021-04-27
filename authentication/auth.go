@@ -136,7 +136,7 @@ func ReadPyloadJWT(tokenString string) jwt.MapClaims {
 
 	token, err := jwt.Parse(tokenString, nil)
 	if token == nil {
-		fmt.Println("Error validate " + err.Error())
+		fmt.Println("Error validate jwt " + err.Error())
 	}
 	claims, _ := token.Claims.(jwt.MapClaims)
 

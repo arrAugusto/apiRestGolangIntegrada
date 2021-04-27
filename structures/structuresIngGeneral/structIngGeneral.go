@@ -17,6 +17,61 @@ type NewProductGeneral struct {
 	IdProduct     int     `valid: "IsNumeric"`
 	Bultos        int     `valid: "IsNumeric"`
 	ValorUnitario float64 `valid: "IsFloat"`
+	TokenReq      string  `valid: "string"`
+}
+
+//Struct para guardar un detalle de producto posiblemente del struct anterior
+
+type IncidenciaDescarga struct {
+	IdIngReq       int    `valid: "IsNumeric"`
+	IdDetalleReq   int    `valid: "IsNumeric"`
+	DescripcionReq string `valid: "string"`
+	TokenReq       string `valid: "string"`
+}
+
+//Struct para guardar el metraje de bodega
+type NewMetraje struct {
+	IdIngReq           int     `valid: "IsNumeric"`
+	IdDetalleReq       int     `valid: "IsNumeric"`
+	IdAreaBodReq       int     `valid: "IsNumeric"`
+	MetrosReq          float64 `valid: "IsFloat"`
+	PosicionesReq      int     `valid: "IsNumeric"`
+	PromedioTarimaReq  float64 `valid: "IsFloat"`
+	MetrosStockReq     float64 `valid: "IsFloat"`
+	PosicionesStockReq int     `valid: "IsNumeric"`
+	TokenReq           string  `valid: "string"`
+}
+
+//Struct para guardar la ubicación de mercaderia
+type NewUbicaciones struct {
+	IdIngReq     int    `valid: "IsNumeric"`
+	IdDetalleReq int    `valid: "IsNumeric"`
+	IdAreaBodReq int    `valid: "IsNumeric"`
+	Pasillo      int    `valid: "IsNumeric"`
+	Columna      int    `valid: "IsNumeric"`
+	Comentarios  string `valid: "string"`
+	TokenReq     string `valid: "string"`
+}
+
+//Struct remove ingresos
+
+type AnulacionFormas struct {
+	Motivo   string `valid: "string"`
+	TokenReq string `valid: "string"`
+}
+
+//Struct Anulacion de detalles de mercaderia
+type AnulacionDetallesGeneral struct {
+	IdDetalle int    `valid: "isNumeric"`
+	Motivo    string `valid: "string"`
+	TokenReq  string `valid: "string"`
+}
+
+//Struct para guardar un detalle de producto posiblemente del struct anterior
+
+type NewProducto struct {
+	Producto string `valid: "string"`
+	TokenReq string `valid: "string"`
 }
 
 //Jwt Read
