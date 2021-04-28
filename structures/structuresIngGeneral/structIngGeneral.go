@@ -1,6 +1,12 @@
 package structuresIngGeneral
 
+///***********************************************************************************************************///
+//								ESTRUCTURAS PARA GUARDAR DATA EN LA DB
+//
+///***********************************************************************************************************///
+
 //Struct para guardar un nuevo ingreso de bodega general paso 1
+
 type IngresoGeneralDat struct {
 	IdUser   int     `valid: "IsNumeric"`
 	IdBod    int     `valid: "IsNumeric"`
@@ -53,6 +59,62 @@ type NewUbicaciones struct {
 	TokenReq     string `valid: "string"`
 }
 
+///***********************************************************************************************************///
+//								ESTRUCTURAS PARA GUARDAR DATA EN LA DB
+//
+///***********************************************************************************************************///
+
+//Struct para almacenar datos que modifcaran el ingreso
+type UpdateIng struct {
+	IdIngReq    int     `valid: "IsNumeric"`
+	BultosTotal int     `valid: "IsNumeric"`
+	ValorTotal  float64 `valid: "IsFloat"`
+	Motivo      string  `valid: "string"`
+	TokenReq    string  `valid: "string"`
+}
+
+//Struct para almacenar datos que modifcaran los detalles de mercaderia
+type UpdateDetalle struct {
+	IdIngReq  int     `valid: "IsNumeric"`
+	IdProduct int     `valid: "IsNumeric"`
+	Bultos    int     `valid: "IsNumeric"`
+	PUnitario float64 `valid: "IsFloat"`
+	Motivo    string  `valid: "string"`
+	TokenReq  string  `valid: "string"`
+}
+
+//Struct para almacenar datos que modifcaran los detalles de mercaderia
+type UpdateIncidencia struct {
+	Motivo      string `valid: string`
+	Descripcion string `valid: "string"`
+	TokenReq    string `valid: "string"`
+}
+
+//Struct para almacenar datos que modifcaran los detalles de mercaderia
+type UpdateMetraje struct {
+	IdAreaBodReq int     `valid: "IsNumeric"`
+	Metros       float64 `valid: "float"`
+	Posiciones   float64 `valid: "float"`
+	Promedio     float64 `valid: "float"`
+	Motivo       string  `valid: string`
+	TokenReq     string  `valid: "string"`
+}
+
+//Struct para almacenar datos que modifcaran los detalles de mercaderia
+type UpdateUbicacion struct {
+	IdAreaBodReq int    `valid: "IsNumeric"`
+	Pasillo      int    `valid: "isNumeric"`
+	Columna      int    `valid: "isNumeric"`
+	Comentario   string `valid: "string"`
+	Motivo       string `valid: string`
+	TokenReq     string `valid: "string"`
+}
+
+///***********************************************************************************************************///
+//									ESTRUCTURAS PARA ANULAR DATA EN LA DB
+//
+///***********************************************************************************************************///
+
 //Struct remove ingresos
 
 type AnulacionFormas struct {
@@ -73,6 +135,11 @@ type NewProducto struct {
 	Producto string `valid: "string"`
 	TokenReq string `valid: "string"`
 }
+
+///***********************************************************************************************************///
+//								ESTRUCTURAS PARA AUTENTICACION Y RESPUESTAS GENERICAS
+//
+///***********************************************************************************************************///
 
 //Jwt Read
 type JwtRead struct {

@@ -344,3 +344,207 @@ func MdlRutaImagen(IngING int) []StructDB.ImagenesRuta {
 
 	return respSQLRuta
 }
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlUpdateIngresoGeneral(idIng int, IdUserInt int, bultos int, ValorTotal float64, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spUpdateIngGeneral ?, ?, ?, ?, ?, ?, ?", idIng, IdUserInt, bultos, ValorTotal, dt, dt, Motivo)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlUpdateDetallesGeneral(idDetalle int, IdIngReq int, IdUserInt int, IdProduct int, Bultos int, PUnitario float64, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spUpdateDetGeneral ?, ?, ?, ?, ?, ?, ?, ?", idDetalle, IdIngReq, IdProduct, IdUserInt, Bultos, PUnitario, Motivo, dt)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlDetallesGeneralRemove(idIncidencia int, IdUserInt int, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spCancelVisual ?, ?, ?, ? ", idIncidencia, IdUserInt, Motivo, dt)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlIncDescGeneralUpdate(idIncidencia int, IdUserInt int, Descripcion string, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spEditProduc ?, ?, ?, ?, ?  ", idIncidencia, IdUserInt, Descripcion, Motivo, dt)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlMetrajeBodegaGeneralUpdate(idMetraje int, IdAreaBodReq int, IdUserInt int, Metros float64, Posiciones float64, Promedio float64, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spModMetrajeGeneral ?, ?, ?, ?, ?, ?, ?, ?  ", idMetraje, IdAreaBodReq, IdUserInt, Metros, Posiciones, Promedio, Motivo, dt)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general" + err.Error())
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlUbicacionesMercaGUpdate(idUbica int, IdAreaBodReq int, IdUserInt int, Pasillo int, Columna int, Comentario string, Motivo string) []StructDB.RespuestaInsertInGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.RespuestaInsertInGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.RespuestaInsertInGeneral
+	//Hora de la transacción
+	dt := time.Now()
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spModificaUbicacion ?, ?, ?, ?, ?, ?, ?, ?  ", idUbica, IdAreaBodReq, IdUserInt, Pasillo, Columna, Comentario, Motivo, dt)
+	if err != nil {
+		log.Fatal("Error al guardar el ingreso general" + err.Error())
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.RespSQL)
+		if err != nil {
+			log.Fatal("Error al guardar el ingreso general")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	fmt.Println(rows)
+	return respuesta
+
+}

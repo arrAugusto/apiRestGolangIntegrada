@@ -67,29 +67,6 @@ func CtrIngGeneral(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
-	* CtrIngGeneral Sirve modificar la data del ingreso
-**/
-
-func CtrIngGeneralUpdate(w http.ResponseWriter, r *http.Request) {
-	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	params := mux.Vars(r)
-	idIng := params["idIng"]
-	fmt.Println(idIng)
-	//SETEANDO LA DATA EN EL STRUCT
-	var ObjDataIngGeneral StructDB.ObjIdIng
-	err = json.Unmarshal(b, &ObjDataIngGeneral)
-	fmt.Println(ObjDataIngGeneral)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode("respuestaDB")
-}
-
-/**
 	* CtrIngGeneral remover de la vista el ingreso dar de debaja
 **/
 
@@ -126,6 +103,135 @@ func CtrIngGeneralRemove(w http.ResponseWriter, r *http.Request) {
 
 	storeProduce := "spDebajaIngGeneral"
 	respuestaDB := Respuesta.MdlRemoveEstadosActivos(IdIngGeneral, IdUserInt, motivo, storeProduce)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrMetrajeBodegaGeneralRemove remover de la vista el ingreso dar de debaja
+**/
+
+func CtrMetrajeBodegaGeneralRemove(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idMetraje, err := strconv.Atoi(params["idMetraje"])
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	storeProduce := "spDebajaMetraje"
+	respuestaDB := Respuesta.MdlRemoveEstadosActivos(idMetraje, IdUserInt, motivo, storeProduce)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrUbicacionesMercaGRemove remover la ubicacion de mercaderia
+**/
+
+func CtrUbicacionesMercaGRemove(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idUbica, err := strconv.Atoi(params["idUbica"])
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	storeProduce := "spDebajaUbicacion"
+	respuestaDB := Respuesta.MdlRemoveEstadosActivos(idUbica, IdUserInt, motivo, storeProduce)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrDowloadSoportLegalRemove remover la visualización de la certificación
+**/
+
+func CtrDowloadSoportLegalRemove(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idDoc, err := strconv.Atoi(params["idDoc"])
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	storeProduce := "spDebajaDocDescarga"
+	respuestaDB := Respuesta.MdlRemoveEstadosActivos(idDoc, IdUserInt, motivo, storeProduce)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)
@@ -173,6 +279,94 @@ func CtrDetallesGenRemove(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)
 	return
+}
+
+/**
+	* CtrRemoveIMGContainer cancelar visualmente el estado de la fotografia del contenedor
+**/
+
+func CtrRemoveIMGContainer(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idImg, err := strconv.Atoi(params["idImg"])
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	storeProduce := "spDebajaIMGCont"
+	respuestaDB := Respuesta.MdlRemoveEstadosActivos(idImg, IdUserInt, motivo, storeProduce)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}
+
+/**
+	* CtrIMGDescMercarRemove cancelar visualmente el estado de la fotografia de las mercaderias recibidas
+**/
+
+func CtrIMGDescMercarRemove(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idImg, err := strconv.Atoi(params["idImg"])
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+
+	motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	storeProduce := "spDebajaIMGMeca"
+	respuestaDB := Respuesta.MdlRemoveEstadosActivos(idImg, IdUserInt, motivo, storeProduce)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
 }
 
 //Creando nuevos productos en bodega general
@@ -594,4 +788,242 @@ func errorHandle(err error, w http.ResponseWriter) {
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
+}
+
+/**
+	* CtrIngGeneralUpdate Sirve modificar la data del ingreso
+**/
+
+func CtrIngGeneralUpdate(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idIng, err := strconv.Atoi(params["idIng"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.UpdateIng
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	bultos := ObjDataIngGeneral.BultosTotal
+	ValorTotal := ObjDataIngGeneral.ValorTotal
+	Motivo := ObjDataIngGeneral.Motivo
+
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlUpdateIngresoGeneral(idIng, IdUserInt, bultos, ValorTotal, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrDetallesGenUpdate Sirve modificar la data de los detalles de ingresos, el detalle sera modificado si solo si
+	* el ingreso esta en estado antes de finalizado, de lo contrario solo el supervisor puede modificar
+**/
+
+func CtrDetallesGenUpdate(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idDetalle, err := strconv.Atoi(params["idDetalle"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.UpdateDetalle
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	IdIngReq := ObjDataIngGeneral.IdIngReq
+	IdProduct := ObjDataIngGeneral.IdProduct
+	PUnitario := ObjDataIngGeneral.PUnitario
+	Motivo := ObjDataIngGeneral.Motivo
+	Bultos := ObjDataIngGeneral.Bultos
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlUpdateDetallesGeneral(idDetalle, IdIngReq, IdUserInt, IdProduct, Bultos, PUnitario, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrDetallesGenUpdate Sirve modificar la data de los detalles de ingresos, el detalle sera modificado si solo si
+	* el ingreso esta en estado antes de finalizado, de lo contrario solo el supervisor puede modificar
+**/
+
+func CtrIncDescGeneralRemove(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idIncidencia, err := strconv.Atoi(params["idIncidencia"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.AnulacionFormas
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	Motivo := ObjDataIngGeneral.Motivo
+	tokenString := ObjDataIngGeneral.TokenReq
+
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
+	respuestaDB := Respuesta.MdlDetallesGeneralRemove(idIncidencia, IdUserInt, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrIncDescGeneralUpdate Sirve la incendencia de la mercaderia recibida
+**/
+
+func CtrIncDescGeneralUpdate(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idIncidencia, err := strconv.Atoi(params["idIncidencia"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.UpdateIncidencia
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	Motivo := ObjDataIngGeneral.Motivo
+
+	Descripcion := ObjDataIngGeneral.Descripcion
+
+	tokenString := ObjDataIngGeneral.TokenReq
+	fmt.Println(tokenString)
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlIncDescGeneralUpdate(idIncidencia, IdUserInt, Descripcion, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrIncDescGeneralUpdate Sirve la incendencia de la mercaderia recibida
+**/
+
+func CtrMetrajeBodegaGeneralUpdate(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idMetraje, err := strconv.Atoi(params["idMetraje"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.UpdateMetraje
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	IdAreaBodReq := ObjDataIngGeneral.IdAreaBodReq
+	fmt.Println(IdAreaBodReq)
+	Metros := ObjDataIngGeneral.Metros
+	Posiciones := ObjDataIngGeneral.Posiciones
+	Promedio := ObjDataIngGeneral.Promedio
+	Motivo := ObjDataIngGeneral.Motivo
+
+	tokenString := ObjDataIngGeneral.TokenReq
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlMetrajeBodegaGeneralUpdate(idMetraje, IdAreaBodReq, IdUserInt, Metros, Posiciones, Promedio, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+}
+
+/**
+	* CtrIncDescGeneralUpdate Sirve la incendencia de la mercaderia recibida
+**/
+
+func CtrUbicacionesMercaGUpdate(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//LEYENDO LA VARIABLE EN UR
+	params := mux.Vars(r)
+
+	idUbica, err := strconv.Atoi(params["idUbica"])
+
+	//SETEANDO LA DATA EN EL STRUCT
+	var ObjDataIngGeneral StructDB.UpdateUbicacion
+	err = json.Unmarshal(b, &ObjDataIngGeneral)
+	if err != nil {
+		http.Error(w, "Error en el envio de datos", 500)
+		return
+	}
+	IdAreaBodReq := ObjDataIngGeneral.IdAreaBodReq
+	Pasillo := ObjDataIngGeneral.Pasillo
+	Columna := ObjDataIngGeneral.Columna
+	Comentario := ObjDataIngGeneral.Comentario
+	Motivo := ObjDataIngGeneral.Motivo
+
+	tokenString := ObjDataIngGeneral.TokenReq
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlUbicacionesMercaGUpdate(idUbica, IdAreaBodReq, IdUserInt, Pasillo, Columna, Comentario, Motivo)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
 }
