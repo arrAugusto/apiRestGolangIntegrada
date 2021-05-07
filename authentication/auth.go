@@ -12,6 +12,11 @@ import (
 	packetJWT "github.com/dgrijalva/jwt-go"
 )
 
+//Jwt Read
+type JwtReadRevision struct {
+	TokenReq string `json: tokenReq`
+}
+
 //guaradando variables de javes publicas y privadas
 var (
 	privateKey *rsa.PrivateKey
@@ -42,7 +47,9 @@ type Claim struct {
 
 //Array que retorna el objeto JWT ala vista
 type JWTRespStarting struct {
-	TokenStarting string `json: tokenStarting`
+	TokenStarting string    `json: tokenStarting`
+	Status        string    `json: status`
+	Body          []JWTAuth `json: body`
 }
 
 //inicializando los metodos a utilizar
@@ -55,8 +62,15 @@ CREANDO JWT SEGUN EL LA STRUCTURA DEL JWTAUTH
 **/
 func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	//haciendo publico el uso del objeto JWTAuth / JWTRespStarting
+
 	var jwt JWTAuth
+
 	var jwtStart JWTRespStarting
+	//Seteando y limpiando objetos a retornar
+	jwtStart.Status = ""
+	jwtStart.TokenStarting = ""
+	jwtStart.Body = nil
+	JwtResp = nil
 	//Haciendo set al objeto JWTAuth
 	jwt.IdUserJWT = data[0].IdUser
 	jwt.NombreJWT = data[0].Nombre
@@ -70,15 +84,20 @@ func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	jwt.FotoJWT = data[0].Foto
 	jwt.EstadoJWT = data[0].Estado
 	jwt.DepartamentosJWT = data[0].Departamentos
+
 	//Cargando variables al objeto
 	JwtResp = append(JwtResp, jwt)
 	//Invocando el metodo que crea el JWT
 	jwtGenerado := GenerateJWT(JwtResp, []Claim{})
+
 	//Asignando string JWT a el objeto a retornar como array
 	jwtStart.TokenStarting = jwtGenerado
+	jwtStart.Status = "conectado"
+	jwtStart.Body = JwtResp
 	//Cargando al metodo jwt
 	TokenStarting := append(tokenStart, jwtStart)
-	//Retornando el metodo con el que se logueara el usuario
+
+	//Retornando el string token de conexión
 	return TokenStarting
 
 }
@@ -142,4 +161,27 @@ func ReadPyloadJWT(tokenString string) jwt.MapClaims {
 
 	return claims
 
+}
+
+func ValidateToken(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return publicKey, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return token, nil
+
+}
+
+func TokenValid(TokeView string) error {
+	token, err := ValidateToken(TokeView)
+	if err != nil {
+		return err
+	}
+	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+		return err
+	}
+	return nil
 }

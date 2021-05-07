@@ -5,6 +5,7 @@ import (
 
 	StructUser "../../structures/structuresUser"
 	Conecta "../databaseSQL"
+	"golang.org/x/crypto/bcrypt"
 )
 
 /**
@@ -41,16 +42,14 @@ func MdlConsultaUsuarios(UserIng int, PwIng string) ([]StructUser.Usuario, error
 		//	names = append(names, id)
 	}
 
-	if len(usuarios) == 1 && PwIng == usuarios[0].Password {
+	check := bcrypt.CompareHashAndPassword([]byte(usuarios[0].Password), []byte(PwIng))
+	if check != nil {
+		fmt.Println("Usuario o contraseña no existen")
+		return nil, err
+	} else {
 		PwIng = ""
 		usuarios[0].Password = ""
-
-		if err != nil {
-			fmt.Println("No se encontro el usuario: " + err.Error())
-			return nil, err
-
-		}
 		return usuarios, nil
 	}
-	return nil, err
+
 }

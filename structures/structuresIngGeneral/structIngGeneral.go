@@ -8,11 +8,11 @@ package structuresIngGeneral
 //Struct para guardar un nuevo ingreso de bodega general paso 1
 
 type IngresoGeneralDat struct {
-	IdUser   int     `valid: "IsNumeric"`
 	IdBod    int     `valid: "IsNumeric"`
 	IdNit    int     `valid: "IsNumeric"`
 	CantBlts int     `valid: "IsNumeric"`
 	ValTotal float64 `valid: "IsFloat"`
+	TokenReq string  `valid: "string"`
 }
 
 //Struct para guardar un detalle de producto posiblemente del struct anterior

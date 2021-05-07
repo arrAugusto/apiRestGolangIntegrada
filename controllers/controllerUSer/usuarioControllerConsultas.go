@@ -22,7 +22,8 @@ type DataRequerida struct {
 }
 
 type UserNotFound struct {
-	Msg string `json: msg`
+	Msg    string `json: msg`
+	Status string `json: status`
 }
 
 /**
@@ -41,30 +42,31 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
+	//SETEANDO USUARIO Y CONTRASEÑA DEL USUARIO
 	usuarioCast := msg.UsuarioReq
 	passwordCast := msg.PasswordReq
 	//TOMANDO VARIABLE DEL USUARIO DE SISTEMA
 
 	//TOMANDO CONTRASEÑA DEL USUARIO
 	usuarioData, err := Consult.MdlConsultaUsuarios(usuarioCast, passwordCast)
-
+	//MANEJO DE ERROR
 	if err != nil {
 		fmt.Printf("Error obteniendo contactos: %v", err)
 		return
 	}
-
+	var message UserNotFound
 	//	CrearJWTUser(usuarioData)
 	if len(usuarioData) == 1 {
-
+		message.Msg = "conectado"
 		JWTResponse := Auth.CrearJWTUser(usuarioData)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(JWTResponse)
 		return
 	} else {
-		var message UserNotFound
+
 		message.Msg = "Usuario o Contraseña no existe"
+		message.Status = "NoAutorizado"
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(404)
 		json.NewEncoder(w).Encode(message)

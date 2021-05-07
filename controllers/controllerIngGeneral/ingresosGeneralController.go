@@ -40,25 +40,32 @@ func CtrIngGeneral(w http.ResponseWriter, r *http.Request) {
 	var ObjDataIngGeneral StructDB.IngresoGeneralDat
 	err = json.Unmarshal(b, &ObjDataIngGeneral)
 	if err != nil {
-		http.Error(w, "Error en el envio de datos", 500)
+		http.Error(w, "Error en la recepción de su objeto JSON ", 500)
 		return
 	}
 	//VALIDANDO LA DATA QUE CUMPLAN CON LO SOLICITADO
 	RevisionStruct, err := govalidator.ValidateStruct(ObjDataIngGeneral)
 	if err != nil {
-		http.Error(w, "Error en la validación del formulario "+err.Error(), 500)
+		http.Error(w, "Error en la validación de la data "+err.Error(), 500)
 		return
 	}
 
-	//GUARDANDO INGRESO
-	fmt.Println(RevisionStruct)
-	IdUser := ObjDataIngGeneral.IdUser
+	//Si la validación es falsa se retorna el error y termina la ejecución deL codigo
+	if RevisionStruct == false {
+		http.Error(w, "Error en la validación de la data "+err.Error(), 500)
+		return
+	}
+	//getter de los valores de la estructura
 	IdBod := ObjDataIngGeneral.IdBod
 	IdNit := ObjDataIngGeneral.IdNit
 	CantBlts := ObjDataIngGeneral.CantBlts
 	ValTotal := ObjDataIngGeneral.ValTotal
+	tokenString := ObjDataIngGeneral.TokenReq
 
-	respuestaDB := Respuesta.MdlNuevoIngresoGeneral(IdUser, IdBod, IdNit, CantBlts, ValTotal)
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+	respuestaDB := Respuesta.MdlNuevoIngresoGeneral(IdUserInt, IdBod, IdNit, CantBlts, ValTotal)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)
