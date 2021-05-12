@@ -1,6 +1,7 @@
 package modelNit
 
 import (
+	"fmt"
 	"log"
 
 	StructDB "../../structures/structNit"
@@ -25,13 +26,14 @@ func MdlConsultaNit(nitEmpresa string, storeProduce string) []StructDB.NitClient
 	defer rows.Close()
 	for rows.Next() {
 		//Leyendo cada una de las rows
-		err := rows.Scan(&resp.IdNit, &resp.NumNit, &resp.NombreEmprea, &resp.DireccionEmpresa, &resp.ContactoEmpresa, &resp.Telefonoempresa, &resp.CorreoEmpresa, &resp.NombreEjecutivo, &resp.TelefonoEjecutivo)
+		err := rows.Scan(&resp.Contacto, &resp.DireccionEmpresa, &resp.Ejecutivo, &resp.EmailConta, &resp.EmailEje, &resp.Id, &resp.NitEmpresa, &resp.NombreEmpresa, &resp.TelEjecutivo, &resp.TelEmpresa)
 		if err != nil {
 			log.Fatal("Error en set objeto" + err.Error())
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
 	}
+	fmt.Println(storeProduce)
 	return respuesta
 
 }

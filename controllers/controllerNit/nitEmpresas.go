@@ -30,7 +30,7 @@ func CtrMostrarNit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storeProduce := "spConsultaNitGen"
+	storeProduce := "spNitGeneralIng"
 	respuestaDB := Respuesta.MdlConsultaNit(NumeroNit, storeProduce)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)

@@ -1034,3 +1034,54 @@ func CtrUbicacionesMercaGUpdate(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(respuestaDB)
 	return
 }
+
+//Creando nuevos productos en bodega general
+
+func ConsultaProductos(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	params := mux.Vars(r)
+	Producto := params["producto"]
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	tokenString := r.FormValue("TokenReq")
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+
+	respuestaDB := Respuesta.MdlConsultaProducto(Producto)
+	fmt.Println(respuestaDB)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}
+
+//Creando nuevos productos en bodega general
+
+func ConsultaProductosAll(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	tokenString := r.FormValue("TokenReq")
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+
+	respuestaDB := Respuesta.MdlConsultaProductoAll()
+	fmt.Println(respuestaDB)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}

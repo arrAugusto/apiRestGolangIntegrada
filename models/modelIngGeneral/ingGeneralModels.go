@@ -24,7 +24,7 @@ func MdlNuevoIngresoGeneral(IdUser int, IdBod int, IdNit int, CantBlts int, ValT
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spInsertIngGeneral ?, ?, ?, ?, ?, ?, ?, ?, ?", IdBod, IdUser, IdNit, CantBlts, ValTotal, CantBlts, ValTotal, dt, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -32,7 +32,7 @@ func MdlNuevoIngresoGeneral(IdUser int, IdBod int, IdNit int, CantBlts int, ValT
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
@@ -59,7 +59,7 @@ func MdlNewProductGeneral(IdIng int, IdUser int, IdProduct int, Bultos int, Valo
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spNewProducGeneral ?, ?, ?, ?, ?, ? ", IdIng, IdUser, IdProduct, Bultos, ValorUnitario, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -94,7 +94,7 @@ func MdlRemoveEstadosActivos(idOperacion int, idUsuario int, motivo string, stor
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC "+storeProduce+" ?, ?, ?, ?", idOperacion, idUsuario, motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -128,7 +128,7 @@ func MdlRemoveEstdDetGeneral(IdIngGeneral int, idDetalle int, IdUserInt int, mot
 
 	rows, err := Conecta.ConectionSQL().Query("EXEC "+storeProduce+" ?, ?, ?, ?, ?", IdIngGeneral, idDetalle, IdUserInt, motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -162,7 +162,7 @@ func MdlNewProducto(Producto string, IdUser int) []StructDB.RespuestaInsertInGen
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spNewProducto ?, ?, ?", IdUser, Producto, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -196,7 +196,7 @@ func MdlIncidenciaDesGenerla(IdIng int, IdDetalle int, IdUser int, Descripcion s
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spNewDescRec ?, ?, ?, ?, ?", IdIng, IdDetalle, IdUser, Descripcion, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general " + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado " + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -230,7 +230,7 @@ func MdlNewMetrajeBodGeneral(IdIng int, IdDetalle int, IdAreaBod int, IdUserInt 
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spNewMetrajeGeneral ?, ?, ?, ?, ?, ?, ?, ?, ?, ?", IdIng, IdDetalle, IdAreaBod, IdUserInt, Metros, Posiciones, PromedioTarima, MetrosStock, PosicionesStock, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general " + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado " + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -264,7 +264,7 @@ func MdlNewUbicacionBodegaGeneral(IdIng int, IdDetalle int, IdAreaBod int, IdUse
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spNewUbicacion ?, ?, ?, ?, ?, ?, ?, ?", IdIng, IdDetalle, IdAreaBod, IdUserInt, Pasillo, Columna, Comentarios, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general " + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado " + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -297,7 +297,7 @@ func MdlNewDocSistema(IdIngGeneral int, IdUserInt int, spExecute string, Ruta st
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC "+spExecute+" ?, ?, ?, ?", IdIngGeneral, IdUserInt, Ruta, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general" + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado" + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -305,7 +305,7 @@ func MdlNewDocSistema(IdIngGeneral int, IdUserInt int, spExecute string, Ruta st
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respSQL = append(respSQL, resp)
 		//	names = append(names, id)
@@ -328,7 +328,7 @@ func MdlRutaImagen(IngING int) []StructDB.ImagenesRuta {
 	//	fmt.Println(dt)
 	rows, err := Conecta.ConectionSQL().Query("EXEC spGetRutaImgDocDesc ?", IngING)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general" + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado" + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -336,7 +336,7 @@ func MdlRutaImagen(IngING int) []StructDB.ImagenesRuta {
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RutaImg)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respSQLRuta = append(respSQLRuta, resp)
 		//	names = append(names, id)
@@ -361,7 +361,7 @@ func MdlUpdateIngresoGeneral(idIng int, IdUserInt int, bultos int, ValorTotal fl
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spUpdateIngGeneral ?, ?, ?, ?, ?, ?, ?", idIng, IdUserInt, bultos, ValorTotal, dt, dt, Motivo)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -369,7 +369,7 @@ func MdlUpdateIngresoGeneral(idIng int, IdUserInt int, bultos int, ValorTotal fl
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
@@ -395,7 +395,7 @@ func MdlUpdateDetallesGeneral(idDetalle int, IdIngReq int, IdUserInt int, IdProd
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spUpdateDetGeneral ?, ?, ?, ?, ?, ?, ?, ?", idDetalle, IdIngReq, IdProduct, IdUserInt, Bultos, PUnitario, Motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -403,7 +403,7 @@ func MdlUpdateDetallesGeneral(idDetalle int, IdIngReq int, IdUserInt int, IdProd
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
@@ -429,7 +429,7 @@ func MdlDetallesGeneralRemove(idIncidencia int, IdUserInt int, Motivo string) []
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spCancelVisual ?, ?, ?, ? ", idIncidencia, IdUserInt, Motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -437,12 +437,11 @@ func MdlDetallesGeneralRemove(idIncidencia int, IdUserInt int, Motivo string) []
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
 	}
-	fmt.Println(rows)
 	return respuesta
 
 }
@@ -463,7 +462,7 @@ func MdlIncDescGeneralUpdate(idIncidencia int, IdUserInt int, Descripcion string
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spEditProduc ?, ?, ?, ?, ?  ", idIncidencia, IdUserInt, Descripcion, Motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general")
+		log.Fatal("Error de lectura de procedimiento almacenado")
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -471,7 +470,7 @@ func MdlIncDescGeneralUpdate(idIncidencia int, IdUserInt int, Descripcion string
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
@@ -497,7 +496,7 @@ func MdlMetrajeBodegaGeneralUpdate(idMetraje int, IdAreaBodReq int, IdUserInt in
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spModMetrajeGeneral ?, ?, ?, ?, ?, ?, ?, ?  ", idMetraje, IdAreaBodReq, IdUserInt, Metros, Posiciones, Promedio, Motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general" + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado" + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -505,7 +504,7 @@ func MdlMetrajeBodegaGeneralUpdate(idMetraje int, IdAreaBodReq int, IdUserInt in
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
@@ -531,7 +530,7 @@ func MdlUbicacionesMercaGUpdate(idUbica int, IdAreaBodReq int, IdUserInt int, Pa
 	//Ejecutando el query
 	rows, err := Conecta.ConectionSQL().Query("EXEC spModificaUbicacion ?, ?, ?, ?, ?, ?, ?, ?  ", idUbica, IdAreaBodReq, IdUserInt, Pasillo, Columna, Comentario, Motivo, dt)
 	if err != nil {
-		log.Fatal("Error al guardar el ingreso general" + err.Error())
+		log.Fatal("Error de lectura de procedimiento almacenado" + err.Error())
 	}
 	//Destruir los rows que se almacenan en memoria dinamica al final del script
 	defer rows.Close()
@@ -539,12 +538,74 @@ func MdlUbicacionesMercaGUpdate(idUbica int, IdAreaBodReq int, IdUserInt int, Pa
 		//Leyendo cada una de las rows
 		err := rows.Scan(&resp.RespSQL)
 		if err != nil {
-			log.Fatal("Error al guardar el ingreso general")
+			log.Fatal("Error de lectura de procedimiento almacenado")
 		}
 		respuesta = append(respuesta, resp)
 		//	names = append(names, id)
 	}
 	fmt.Println(rows)
+	return respuesta
+
+}
+
+//Guardando en la base de datos el nuevo ingreso
+func MdlConsultaProducto(Producto string) []StructDB.ConsultaProducto {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.ConsultaProducto{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.ConsultaProducto
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spConsultProducto ? ", Producto)
+	if err != nil {
+		log.Fatal("Error de lectura de procedimiento almacenado")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.Id, &resp.Name)
+		if err != nil {
+			log.Fatal("Error de lectura de procedimiento almacenado")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	return respuesta
+
+}
+
+//buscando todos los productos de bodega general
+func MdlConsultaProductoAll() []StructDB.ConsultaProducto {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.ConsultaProducto{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.ConsultaProducto
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spConsultProductoAll")
+	if err != nil {
+		log.Fatal("Error de lectura de procedimiento almacenado")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.Id, &resp.Name)
+		if err != nil {
+			log.Fatal("Error de lectura de procedimiento almacenado")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
 	return respuesta
 
 }

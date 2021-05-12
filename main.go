@@ -65,6 +65,8 @@ func main() {
 	router.HandleFunc("/ubicacionBodega/{idUbica}", IngresosGene.CtrUbicacionesMercaGRemove).Methods("DELETE")
 
 	router.HandleFunc("/productosBodGeneral", IngresosGene.ProductosBodGeneral).Methods("POST")
+	router.HandleFunc("/productosBodGeneral/{producto}", IngresosGene.ConsultaProductos).Methods("GET")
+	router.HandleFunc("/productosBodGeneralAll", IngresosGene.ConsultaProductosAll).Methods("GET")
 
 	/**
 		*	IMAGENES UPLOAD AND DOWNLOAD METODOS PARA GESTOR DE CONTENIDO
@@ -130,7 +132,7 @@ func main() {
 	   *****
 	   *****
 	   									***** AUTOR AUGUSTO GOMEZ
-	   									***** MODULO DE INGRESOS GENERALES Y SUS ENDPOINT
+	   									***** CONSULTAS REQUERIDAS POR GET
 	   *****
 	   *****
 	   *****
