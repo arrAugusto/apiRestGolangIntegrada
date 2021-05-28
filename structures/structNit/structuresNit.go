@@ -12,3 +12,10 @@ type NitClienteResponse struct {
 	TelEjecutivo     string `json: telEjecutivo`
 	TelEmpresa       string `json: telEmpresa`
 }
+
+type StructBodegas struct {
+	Id             int    `valid: int`
+	AreaAutorizada string `valid: string`
+	NumBod         int    `valid: int`
+	Empresa        string `valid: string`
+}

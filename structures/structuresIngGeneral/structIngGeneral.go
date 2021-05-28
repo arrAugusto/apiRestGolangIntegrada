@@ -8,18 +8,18 @@ package structuresIngGeneral
 //Struct para guardar un nuevo ingreso de bodega general paso 1
 
 type IngresoGeneralDat struct {
-	IdBod    int     `valid: "IsNumeric"`
-	IdNit    int     `valid: "IsNumeric"`
-	CantBlts int     `valid: "IsNumeric"`
-	ValTotal float64 `valid: "IsFloat"`
-	TokenReq string  `valid: "string"`
+	IdBod        int     `valid: "IsNumeric"`
+	IdNit        int     `valid: "IsNumeric"`
+	CantBlts     int     `valid: "IsNumeric"`
+	ValTotal     float64 `valid: "IsFloat"`
+	FechaIngreso string  `valid: "string"`
+	TokenReq     string  `valid: "string"`
 }
 
 //Struct para guardar un detalle de producto posiblemente del struct anterior
 
 type NewProductGeneral struct {
 	IdIng         int     `valid: "IsNumeric"`
-	IdUser        int     `valid: "IsNumeric"`
 	IdProduct     int     `valid: "IsNumeric"`
 	Bultos        int     `valid: "IsNumeric"`
 	ValorUnitario float64 `valid: "IsFloat"`
@@ -141,8 +141,13 @@ type NewProducto struct {
 //
 ///***********************************************************************************************************///
 type ConsultaProducto struct {
-	Id   string `valid: "int"`
+	Id   int    `valid: "int"`
 	Name string `valid: "string"`
+}
+type ConsultaDetalles struct {
+	IdIng         int    `valid: "int"`
+	NombreEmpresa string `valid: "string"`
+	CantTotalBlts int    `valid: "int"`
 }
 
 ///***********************************************************************************************************///

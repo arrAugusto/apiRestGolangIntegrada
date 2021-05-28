@@ -40,9 +40,10 @@ func CtrIngGeneral(w http.ResponseWriter, r *http.Request) {
 	var ObjDataIngGeneral StructDB.IngresoGeneralDat
 	err = json.Unmarshal(b, &ObjDataIngGeneral)
 	if err != nil {
-		http.Error(w, "Error en la recepción de su objeto JSON ", 500)
+		http.Error(w, "Error en la recepción de su objeto JSON "+err.Error(), 500)
 		return
 	}
+
 	//VALIDANDO LA DATA QUE CUMPLAN CON LO SOLICITADO
 	RevisionStruct, err := govalidator.ValidateStruct(ObjDataIngGeneral)
 	if err != nil {
@@ -60,12 +61,21 @@ func CtrIngGeneral(w http.ResponseWriter, r *http.Request) {
 	IdNit := ObjDataIngGeneral.IdNit
 	CantBlts := ObjDataIngGeneral.CantBlts
 	ValTotal := ObjDataIngGeneral.ValTotal
+	fechaRealIng := ObjDataIngGeneral.FechaIngreso
 	tokenString := ObjDataIngGeneral.TokenReq
 
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
 	JWTResponse := Auth.ReadPyloadJWT(tokenString)
 	IdUser := JWTResponse["IdUserJWT"]
 	var IdUserInt int = int(IdUser.(float64))
-	respuestaDB := Respuesta.MdlNuevoIngresoGeneral(IdUserInt, IdBod, IdNit, CantBlts, ValTotal)
+	respuestaDB := Respuesta.MdlNuevoIngresoGeneral(IdUserInt, IdBod, IdNit, CantBlts, ValTotal, fechaRealIng)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)
@@ -92,7 +102,7 @@ func CtrIngGeneralRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 	idIng := params["idIng"]
 	IdIngGeneral, err := strconv.Atoi(idIng)
@@ -135,7 +145,7 @@ func CtrMetrajeBodegaGeneralRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idMetraje, err := strconv.Atoi(params["idMetraje"])
@@ -178,7 +188,7 @@ func CtrUbicacionesMercaGRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idUbica, err := strconv.Atoi(params["idUbica"])
@@ -221,7 +231,7 @@ func CtrDowloadSoportLegalRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idDoc, err := strconv.Atoi(params["idDoc"])
@@ -264,7 +274,7 @@ func CtrDetallesGenRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URLL
 	params := mux.Vars(r)
 	idIng := params["idIng"]
 	IdIngGeneral, err := strconv.Atoi(idIng)
@@ -307,7 +317,7 @@ func CtrRemoveIMGContainer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idImg, err := strconv.Atoi(params["idImg"])
@@ -351,7 +361,7 @@ func CtrIMGDescMercarRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idImg, err := strconv.Atoi(params["idImg"])
@@ -376,7 +386,7 @@ func CtrIMGDescMercarRemove(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//Creando nuevos productos en bodega general
+//Creando nuevos detalles de certificaciones en bodega general
 
 func CtrNewProductGeneral(w http.ResponseWriter, r *http.Request) {
 	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
@@ -401,13 +411,19 @@ func CtrNewProductGeneral(w http.ResponseWriter, r *http.Request) {
 	if RevisionStruct {
 
 	}
-	//GUARDANDO INGRESO
-
 	IdIng := ObjProduct.IdIng
 	IdProduct := ObjProduct.IdProduct
 	Bultos := ObjProduct.Bultos
 	ValorUnitario := ObjProduct.ValorUnitario
 	tokenString := ObjProduct.TokenReq
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
 	JWTResponse := Auth.ReadPyloadJWT(tokenString)
 	IdUser := JWTResponse["IdUserJWT"]
 	var IdUserInt int = int(IdUser.(float64))
@@ -599,10 +615,11 @@ func CtrUbicacionesMercaGeneral(w http.ResponseWriter, r *http.Request) {
 
 func CtrUploadSoportLegal(w http.ResponseWriter, r *http.Request) {
 	//SETEANDO LA DATA EN EL STRUCT
-	var ObjProduct StructDB.JwtRead
 
 	r.ParseMultipartForm(2000)
 	IngIMG := r.FormValue("idIng")
+	fmt.Println(IngIMG)
+	TokenReq := r.FormValue("TokenReq")
 	IdIngGeneral, err := strconv.Atoi(IngIMG)
 	if err != nil {
 		log.Fatal(err)
@@ -610,10 +627,11 @@ func CtrUploadSoportLegal(w http.ResponseWriter, r *http.Request) {
 	}
 	file, fileInfo, err := r.FormFile("fileSoport")
 	split := strings.Split(fileInfo.Filename, ".")
+	fmt.Println(file)
 	if split[1] == "PDF" || split[1] == "pdf" || split[1] == "PNG" || split[1] == "png" || split[1] == "JPG" || split[1] == "jpg" {
-		fmt.Println("Es es pedf")
+		fmt.Println("Es es pdf")
 	} else {
-		fmt.Println("No es pedf")
+		fmt.Println("No es pdf")
 		return
 	}
 	aleatorio := rand.Intn(9999)
@@ -634,7 +652,16 @@ func CtrUploadSoportLegal(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 		return
 	}
-	tokenString := ObjProduct.Token
+	tokenString := TokenReq
+	//Validando token
+	ValidaJWT := Auth.TokenValid(tokenString)
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+	//Loading token
 	JWTResponse := Auth.ReadPyloadJWT(tokenString)
 	IdUser := JWTResponse["IdUserJWT"]
 	var IdUserInt int = int(IdUser.(float64))
@@ -642,9 +669,10 @@ func CtrUploadSoportLegal(w http.ResponseWriter, r *http.Request) {
 	spExecute := "spNewDocDescarga"
 	resp := Respuesta.MdlNewDocSistema(IdIngGeneral, IdUserInt, spExecute, Ruta)
 
-	fmt.Println(resp)
-	//fmt.Println(respuestaDB)
-	fmt.Fprintf(w, fileInfo.Filename)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(resp)
+	return
 }
 
 func CtrDowloadSoportLegal(w http.ResponseWriter, r *http.Request) {
@@ -661,7 +689,6 @@ func CtrDowloadSoportLegal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error en el envio de datos", 500)
 		return
 	}
-
 	IdIngG := ObjIding.IdIngReq
 	respuestaDB := Respuesta.MdlRutaImagen(IdIngG)
 
@@ -670,7 +697,6 @@ func CtrDowloadSoportLegal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rutaImagen := respuestaDB[0].RutaImg
-	fmt.Println(rutaImagen)
 	file, err := os.Open("." + "/" + rutaImagen)
 	if err != nil {
 		log.Fatal(err)
@@ -702,9 +728,9 @@ func CtrContainerDescargaG(w http.ResponseWriter, r *http.Request) {
 	file, fileInfo, err := r.FormFile("fileSoport")
 	split := strings.Split(fileInfo.Filename, ".")
 	if split[1] == "PDF" || split[1] == "pdf" || split[1] == "PNG" || split[1] == "png" || split[1] == "JPG" || split[1] == "jpg" {
-		fmt.Println("Es es pedf")
+		fmt.Println("Es es pdf")
 	} else {
-		fmt.Println("No es pedf")
+		fmt.Println("No es pdf")
 		return
 	}
 	aleatorio := rand.Intn(9999)
@@ -755,9 +781,9 @@ func CtrIMGDescMerca(w http.ResponseWriter, r *http.Request) {
 	file, fileInfo, err := r.FormFile("fileSoport")
 	split := strings.Split(fileInfo.Filename, ".")
 	if split[1] == "PDF" || split[1] == "pdf" || split[1] == "PNG" || split[1] == "png" || split[1] == "JPG" || split[1] == "jpg" {
-		fmt.Println("Es es pedf")
+		fmt.Println("Es es pdf")
 	} else {
-		fmt.Println("No es pedf")
+		fmt.Println("No es pdf")
 		return
 	}
 	aleatorio := rand.Intn(9999)
@@ -808,7 +834,7 @@ func CtrIngGeneralUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idIng, err := strconv.Atoi(params["idIng"])
@@ -848,7 +874,7 @@ func CtrDetallesGenUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idDetalle, err := strconv.Atoi(params["idDetalle"])
@@ -889,7 +915,7 @@ func CtrIncDescGeneralRemove(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idIncidencia, err := strconv.Atoi(params["idIncidencia"])
@@ -926,7 +952,7 @@ func CtrIncDescGeneralUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idIncidencia, err := strconv.Atoi(params["idIncidencia"])
@@ -943,7 +969,6 @@ func CtrIncDescGeneralUpdate(w http.ResponseWriter, r *http.Request) {
 	Descripcion := ObjDataIngGeneral.Descripcion
 
 	tokenString := ObjDataIngGeneral.TokenReq
-	fmt.Println(tokenString)
 	JWTResponse := Auth.ReadPyloadJWT(tokenString)
 	IdUser := JWTResponse["IdUserJWT"]
 	var IdUserInt int = int(IdUser.(float64))
@@ -965,7 +990,7 @@ func CtrMetrajeBodegaGeneralUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idMetraje, err := strconv.Atoi(params["idMetraje"])
@@ -978,7 +1003,6 @@ func CtrMetrajeBodegaGeneralUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	IdAreaBodReq := ObjDataIngGeneral.IdAreaBodReq
-	fmt.Println(IdAreaBodReq)
 	Metros := ObjDataIngGeneral.Metros
 	Posiciones := ObjDataIngGeneral.Posiciones
 	Promedio := ObjDataIngGeneral.Promedio
@@ -1006,7 +1030,7 @@ func CtrUbicacionesMercaGUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	//LEYENDO LA VARIABLE EN UR
+	//LEYENDO LA VARIABLE EN URL
 	params := mux.Vars(r)
 
 	idUbica, err := strconv.Atoi(params["idUbica"])
@@ -1053,7 +1077,6 @@ func ConsultaProductos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respuestaDB := Respuesta.MdlConsultaProducto(Producto)
-	fmt.Println(respuestaDB)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)
@@ -1078,7 +1101,33 @@ func ConsultaProductosAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respuestaDB := Respuesta.MdlConsultaProductoAll()
-	fmt.Println(respuestaDB)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}
+
+//Creando nuevos productos en bodega general
+
+func CtrDetallesGenAll(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	params := mux.Vars(r)
+
+	tokenString := params["TokenReq"]
+
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {	
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+
+	respuestaDB := Respuesta.MdlDetallesGenAll()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)

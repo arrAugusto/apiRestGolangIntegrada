@@ -30,8 +30,36 @@ func CtrMostrarNit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storeProduce := "spNitGeneralIng"
-	respuestaDB := Respuesta.MdlConsultaNit(NumeroNit, storeProduce)
+	respuestaDB := Respuesta.MdlConsultaNit(NumeroNit)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}
+
+/**
+	* CtrMostrarNit muestra nit y datos generales del cliente
+**/
+
+func CtrBodegasInfo(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	params := mux.Vars(r)
+	tokenString := params["TokenReq"]
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+	IdUser := JWTResponse["IdDeBodegaJWT"]
+	var IdDeBodegaJWT int = int(IdUser.(float64))
+
+	respuestaDB := Respuesta.MdlBodegasInfo(IdDeBodegaJWT)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)

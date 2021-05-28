@@ -51,6 +51,8 @@ func main() {
 	router.HandleFunc("/detalleDeProductos", IngresosGene.CtrNewProductGeneral).Methods("POST")
 	router.HandleFunc("/detalleDeProductos/{idDetalle}", IngresosGene.CtrDetallesGenUpdate).Methods("PUT")
 	router.HandleFunc("/detalleDeProductos/{idIng}", IngresosGene.CtrDetallesGenRemove).Methods("DELETE")
+	router.HandleFunc("/detalleDeProductosAll/{TokenReq}", IngresosGene.CtrDetallesGenAll).Methods("GET")
+
 	//INGRESO DE INCIDENCIA  **** POST=INGRESO **** PUT UPDATE **** DELETE ANULACIÓN
 	router.HandleFunc("/incidenciaDesGeneral", IngresosGene.CtrIncidenciaDescGeneral).Methods("POST")
 	router.HandleFunc("/incidenciaDesGeneral/{idIncidencia}", IngresosGene.CtrIncDescGeneralUpdate).Methods("PUT")
@@ -143,6 +145,7 @@ func main() {
 	   *****
 	*/
 	router.HandleFunc("/nitEmpresa/{numNit}", NitEmpresas.CtrMostrarNit).Methods("GET")
+	router.HandleFunc("/bodegasInfo/{TokenReq}", NitEmpresas.CtrBodegasInfo).Methods("GET")
 
 	/**
 		*	ABRIENDO EL CANAL Y PUERTO DE COMUNICACIÓN
