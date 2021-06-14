@@ -25,6 +25,18 @@ var (
 
 //Nuevo objeto a partir del recibido en el retorno y validacion del login
 type JWTAuth struct {
+}
+
+//Objeto que guarda el JWT a retornar
+type Claim struct {
+	JWTAuth `json: myUser`
+	packetJWT.StandardClaims
+}
+
+//Array que retorna el objeto JWT ala vista
+type JWTRespStarting struct {
+	TokenStarting     string `json: tokenStarting`
+	Status            string `json: status`
 	IdUserJWT         int    `json: idJWT`
 	NombreJWT         string `json: nombreJWT`
 	ApellidosJWT      string `json: apellidosJWT`
@@ -37,19 +49,6 @@ type JWTAuth struct {
 	FotoJWT           string `json: fotoJWT`
 	EstadoJWT         int    `json: estadoJWT`
 	DepartamentosJWT  string `json: departamentosJWT`
-}
-
-//Objeto que guarda el JWT a retornar
-type Claim struct {
-	JWTAuth `json: myUser`
-	packetJWT.StandardClaims
-}
-
-//Array que retorna el objeto JWT ala vista
-type JWTRespStarting struct {
-	TokenStarting string    `json: tokenStarting`
-	Status        string    `json: status`
-	Body          []JWTAuth `json: body`
 }
 
 //inicializando los metodos a utilizar
@@ -69,21 +68,21 @@ func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	//Seteando y limpiando objetos a retornar
 	jwtStart.Status = ""
 	jwtStart.TokenStarting = ""
-	jwtStart.Body = nil
+
 	JwtResp = nil
 	//Haciendo set al objeto JWTAuth
-	jwt.IdUserJWT = data[0].IdUser
-	jwt.NombreJWT = data[0].Nombre
-	jwt.ApellidosJWT = data[0].Apellidos
-	jwt.Fecha_creacionJWT = data[0].Fecha_creacion
-	jwt.CelularJWT = data[0].Celular
-	jwt.EmailJWT = data[0].Email
-	jwt.NivelesJWT = data[0].Niveles
-	jwt.DependenciaJWT = data[0].Dependencia
-	jwt.IdDeBodegaJWT = data[0].IdDeBodega
-	jwt.FotoJWT = data[0].Foto
-	jwt.EstadoJWT = data[0].Estado
-	jwt.DepartamentosJWT = data[0].Departamentos
+	jwtStart.IdUserJWT = data[0].IdUser
+	jwtStart.NombreJWT = data[0].Nombre
+	jwtStart.ApellidosJWT = data[0].Apellidos
+	jwtStart.Fecha_creacionJWT = data[0].Fecha_creacion
+	jwtStart.CelularJWT = data[0].Celular
+	jwtStart.EmailJWT = data[0].Email
+	jwtStart.NivelesJWT = data[0].Niveles
+	jwtStart.DependenciaJWT = data[0].Dependencia
+	jwtStart.IdDeBodegaJWT = data[0].IdDeBodega
+	jwtStart.FotoJWT = data[0].Foto
+	jwtStart.EstadoJWT = data[0].Estado
+	jwtStart.DepartamentosJWT = data[0].Departamentos
 
 	//Cargando variables al objeto
 	JwtResp = append(JwtResp, jwt)
@@ -93,7 +92,7 @@ func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	//Asignando string JWT a el objeto a retornar como array
 	jwtStart.TokenStarting = jwtGenerado
 	jwtStart.Status = "conectado"
-	jwtStart.Body = JwtResp
+
 	//Cargando al metodo jwt
 	TokenStarting := append(tokenStart, jwtStart)
 

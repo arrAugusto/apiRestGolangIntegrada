@@ -46,6 +46,7 @@ func main() {
 	router.HandleFunc("/ingresosGeneral", IngresosGene.CtrIngGeneral).Methods("POST")
 	router.HandleFunc("/ingresosGeneral/{idIng}", IngresosGene.CtrIngGeneralUpdate).Methods("PUT")
 	router.HandleFunc("/ingresosGeneral/{idIng}", IngresosGene.CtrIngGeneralRemove).Methods("DELETE")
+	router.HandleFunc("/ingresosGeneralAll", IngresosGene.ConsultaIngALL).Methods("GET")
 
 	//INGRESO DE DETALLES  **** POST=INGRESO **** PUT UPDATE **** DELETE ANULACIÓN
 	router.HandleFunc("/detalleDeProductos", IngresosGene.CtrNewProductGeneral).Methods("POST")

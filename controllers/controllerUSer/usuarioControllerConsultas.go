@@ -46,8 +46,8 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 	usuarioCast := msg.UsuarioReq
 	passwordCast := msg.PasswordReq
 	//TOMANDO VARIABLE DEL USUARIO DE SISTEMA
-
 	//TOMANDO CONTRASEÑA DEL USUARIO
+
 	usuarioData, err := Consult.MdlConsultaUsuarios(usuarioCast, passwordCast)
 	//MANEJO DE ERROR
 	if err != nil {
@@ -61,7 +61,7 @@ func CtrConsultUser(w http.ResponseWriter, r *http.Request) {
 		JWTResponse := Auth.CrearJWTUser(usuarioData)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(JWTResponse)
+		json.NewEncoder(w).Encode(JWTResponse[0])
 		return
 	} else {
 

@@ -1120,7 +1120,7 @@ func CtrDetallesGenAll(w http.ResponseWriter, r *http.Request) {
 
 	ValidaJWT := Auth.TokenValid(tokenString)
 
-	if ValidaJWT != nil {	
+	if ValidaJWT != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(500)
 		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
@@ -1128,6 +1128,31 @@ func CtrDetallesGenAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respuestaDB := Respuesta.MdlDetallesGenAll()
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB)
+	return
+
+}
+
+//Creando nuevos productos en bodega general
+
+func ConsultaIngALL(w http.ResponseWriter, r *http.Request) {
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+
+	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
+	tokenString := r.FormValue("TokenReq")
+	fmt.Println(tokenString)
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		return
+	}
+
+	respuestaDB := Respuesta.MdlConsultaIngALL()
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(respuestaDB)

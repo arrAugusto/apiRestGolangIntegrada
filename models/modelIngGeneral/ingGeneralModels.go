@@ -637,3 +637,34 @@ func MdlDetallesGenAll() []StructDB.ConsultaDetalles {
 	return respuesta
 
 }
+
+//buscando todos los productos de bodega general
+func MdlConsultaIngALL() []StructDB.ConsultaIngGeneral {
+	//SETEANDO LA DATA EN EL STRUCT
+	respuesta := []StructDB.ConsultaIngGeneral{}
+	//instanciando la conexión
+	Conecta.ConectionSQL()
+	//cerrar la conexión al final de script
+	defer Conecta.ConectionSQL().Close()
+	//Tomando la hora y fecha actual para la fecha de registro
+	//instanciando el objeto
+	var resp StructDB.ConsultaIngGeneral
+	//Ejecutando el query
+	rows, err := Conecta.ConectionSQL().Query("EXEC spConsultIngGeneral")
+	if err != nil {
+		log.Fatal("Error de lectura de procedimiento almacenado")
+	}
+	//Destruir los rows que se almacenan en memoria dinamica al final del script
+	defer rows.Close()
+	for rows.Next() {
+		//Leyendo cada una de las rows
+		err := rows.Scan(&resp.KeyData, &resp.IdIng, &resp.NombreEmpresa, &resp.CantTotalBlts)
+		if err != nil {
+			log.Fatal("Error de lectura de procedimiento almacenado")
+		}
+		respuesta = append(respuesta, resp)
+		//	names = append(names, id)
+	}
+	return respuesta
+
+}

@@ -140,11 +140,23 @@ type NewProducto struct {
 //						ESTRUCTURAS PARA CONSULTAS RELACIONADAS A INGRESOS DATA EN LA DB
 //
 ///***********************************************************************************************************///
+
+//strunct todos los productos
 type ConsultaProducto struct {
 	Id   int    `valid: "int"`
 	Name string `valid: "string"`
 }
+
+//struct de detalles consulta
 type ConsultaDetalles struct {
+	IdIng         int    `valid: "int"`
+	NombreEmpresa string `valid: "string"`
+	CantTotalBlts int    `valid: "int"`
+}
+
+//struct de detalles consulta
+type ConsultaIngGeneral struct {
+	KeyData       string `valid: "string"`
 	IdIng         int    `valid: "int"`
 	NombreEmpresa string `valid: "string"`
 	CantTotalBlts int    `valid: "int"`
