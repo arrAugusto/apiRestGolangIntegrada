@@ -46,8 +46,7 @@ func main() {
 	router.HandleFunc("/ingresosGeneral", IngresosGene.CtrIngGeneral).Methods("POST")
 	router.HandleFunc("/ingresosGeneral/{idIng}", IngresosGene.CtrIngGeneralUpdate).Methods("PUT")
 	router.HandleFunc("/ingresosGeneral/{idIng}", IngresosGene.CtrIngGeneralRemove).Methods("DELETE")
-	router.HandleFunc("/ingresosGeneralAll", IngresosGene.ConsultaIngALL).Methods("GET")
-
+	router.HandleFunc("/ingresosGeneralAll/{TokenReq}", IngresosGene.ConsultaIngALL).Methods("GET")
 	//INGRESO DE DETALLES  **** POST=INGRESO **** PUT UPDATE **** DELETE ANULACIÓN
 	router.HandleFunc("/detalleDeProductos", IngresosGene.CtrNewProductGeneral).Methods("POST")
 	router.HandleFunc("/detalleDeProductos/{idDetalle}", IngresosGene.CtrDetallesGenUpdate).Methods("PUT")
@@ -86,7 +85,7 @@ func main() {
 	//IMAGENES DE CONTENEDOR DE DESCARGA
 	router.HandleFunc("/containerDescargaGeneral", IngresosGene.CtrContainerDescargaG).Methods("POST")
 	router.HandleFunc("/containerDescargaGeneral/{idImg}", IngresosGene.CtrRemoveIMGContainer).Methods("DELETE")
-
+	
 	//IMAGENES DE MERCADERIAS RECIBIDAS
 	router.HandleFunc("/mercaderiasRecibidas", IngresosGene.CtrIMGDescMerca).Methods("POST")
 	router.HandleFunc("/mercaderiasRecibidas/{idImg}", IngresosGene.CtrIMGDescMercarRemove).Methods("DELETE")

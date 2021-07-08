@@ -45,7 +45,7 @@ func CtrMostrarNit(w http.ResponseWriter, r *http.Request) {
 func CtrBodegasInfo(w http.ResponseWriter, r *http.Request) {
 	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
 	params := mux.Vars(r)
-	tokenString := params["TokenReq"]
+	tokenString := params["TokenReq"]	
 	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
 	ValidaJWT := Auth.TokenValid(tokenString)
 

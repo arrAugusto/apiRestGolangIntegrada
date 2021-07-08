@@ -13,12 +13,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asaskevich/govalidator"
-	"github.com/gorilla/mux"
-
 	Auth "../../authentication"
+	CheckString "../../controllers"
 	Respuesta "../../models/modelIngGeneral"
 	StructDB "../../structures/structuresIngGeneral"
+	"github.com/asaskevich/govalidator"
+	"github.com/gorilla/mux"
 )
 
 type ListaIngGeneralGO struct {
@@ -719,16 +719,34 @@ func CtrContainerDescargaG(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseMultipartForm(2000)
 	IngIMG := r.FormValue("idIng")
-	tokenString := r.FormValue("tokenReq")
+	token := r.FormValue("tokenReq")
+	check := CheckString.ReplaceString(token)
+	tokenString := check
+
 	IdIngGeneral, err := strconv.Atoi(IngIMG)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
+
+	//Validando el token
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token posiblemente " + ValidaJWT.Error())
+		return
+	}
+	//Obteniendo data del token
+	JWTResponse := Auth.ReadPyloadJWT(tokenString)
+
+	IdUser := JWTResponse["IdUserJWT"]
+	var IdUserInt int = int(IdUser.(float64))
+
 	file, fileInfo, err := r.FormFile("fileSoport")
 	split := strings.Split(fileInfo.Filename, ".")
 	if split[1] == "PDF" || split[1] == "pdf" || split[1] == "PNG" || split[1] == "png" || split[1] == "JPG" || split[1] == "jpg" {
-		fmt.Println("Es es pdf")
 	} else {
 		fmt.Println("No es pdf")
 		return
@@ -751,16 +769,12 @@ func CtrContainerDescargaG(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JWTResponse := Auth.ReadPyloadJWT(tokenString)
-	IdUser := JWTResponse["IdUserJWT"]
-	var IdUserInt int = int(IdUser.(float64))
-
 	spExecute := "spNewIMGContainer"
-	resp := Respuesta.MdlNewDocSistema(IdIngGeneral, IdUserInt, spExecute, Ruta)
-
-	fmt.Println(resp)
-	//fmt.Println(respuestaDB)
-	fmt.Fprintf(w, fileInfo.Filename)
+	respuestaDB := Respuesta.MdlNewDocSistema(IdIngGeneral, IdUserInt, spExecute, Ruta)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(respuestaDB[0])
+	return
 }
 
 /**
@@ -772,8 +786,22 @@ func CtrIMGDescMerca(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseMultipartForm(2000)
 	IngIMG := r.FormValue("idDetalle")
-	tokenString := r.FormValue("tokenReq")
+	token := r.FormValue("tokenReq")
+	check := CheckString.ReplaceString(token)
+	tokenString := check
+
 	idDetalleGeneral, err := strconv.Atoi(IngIMG)
+
+	//Validando el token
+	ValidaJWT := Auth.TokenValid(tokenString)
+
+	if ValidaJWT != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(500)
+		json.NewEncoder(w).Encode("Error en la validación del token posiblemente " + ValidaJWT.Error())
+		return
+	}
+
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -786,6 +814,7 @@ func CtrIMGDescMerca(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("No es pdf")
 		return
 	}
+
 	aleatorio := rand.Intn(9999)
 	numAleatorioString := strconv.Itoa(aleatorio)
 	dt := time.Now()
@@ -811,9 +840,10 @@ func CtrIMGDescMerca(w http.ResponseWriter, r *http.Request) {
 	spExecute := "spNewImgProduct"
 	resp := Respuesta.MdlNewDocSistema(idDetalleGeneral, IdUserInt, spExecute, Ruta)
 
-	fmt.Println(resp)
-	//fmt.Println(respuestaDB)
-	fmt.Fprintf(w, fileInfo.Filename)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(resp[0])
+	return
 }
 
 // Unified error output interface
@@ -1141,14 +1171,16 @@ func ConsultaIngALL(w http.ResponseWriter, r *http.Request) {
 	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
 
 	// LEYENDO LA DATA PROVENIENTE DEL CLIENTE
-	tokenString := r.FormValue("TokenReq")
-	fmt.Println(tokenString)
+	params := mux.Vars(r)
+
+	tokenString := params["TokenReq"]
+
 	ValidaJWT := Auth.TokenValid(tokenString)
 
 	if ValidaJWT != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(500)
-		json.NewEncoder(w).Encode("Error en la validación del token " + ValidaJWT.Error())
+		json.NewEncoder(w).Encode("Error en la validación del token posiblemente " + ValidaJWT.Error())
 		return
 	}
 

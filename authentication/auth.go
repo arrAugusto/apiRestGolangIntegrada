@@ -25,6 +25,18 @@ var (
 
 //Nuevo objeto a partir del recibido en el retorno y validacion del login
 type JWTAuth struct {
+	IdUserJWT         int    `json: idJWT`
+	NombreJWT         string `json: nombreJWT`
+	ApellidosJWT      string `json: apellidosJWT`
+	Fecha_creacionJWT string `json: fechaCreacionJWT`
+	CelularJWT        string `json: telefonoJWT`
+	EmailJWT          string `json: emailJWT`
+	NivelesJWT        string `json: nivelesJWT`
+	DependenciaJWT    int    `json: dependenciaJWT`
+	IdDeBodegaJWT     int    `json: idBodegaJWT`
+	FotoJWT           string `json: fotoJWT`
+	EstadoJWT         int    `json: estadoJWT`
+	DepartamentosJWT  string `json: departamentosJWT`
 }
 
 //Objeto que guarda el JWT a retornar
@@ -83,6 +95,24 @@ func CrearJWTUser(data []StructUser.Usuario) []JWTRespStarting {
 	jwtStart.FotoJWT = data[0].Foto
 	jwtStart.EstadoJWT = data[0].Estado
 	jwtStart.DepartamentosJWT = data[0].Departamentos
+
+	//Seteando y limpiando objetos a retornar
+	jwtStart.Status = ""
+	jwtStart.TokenStarting = ""
+	JwtResp = nil
+	//Haciendo set al objeto JWTAuth
+	jwt.IdUserJWT = data[0].IdUser
+	jwt.NombreJWT = data[0].Nombre
+	jwt.ApellidosJWT = data[0].Apellidos
+	jwt.Fecha_creacionJWT = data[0].Fecha_creacion
+	jwt.CelularJWT = data[0].Celular
+	jwt.EmailJWT = data[0].Email
+	jwt.NivelesJWT = data[0].Niveles
+	jwt.DependenciaJWT = data[0].Dependencia
+	jwt.IdDeBodegaJWT = data[0].IdDeBodega
+	jwt.FotoJWT = data[0].Foto
+	jwt.EstadoJWT = data[0].Estado
+	jwt.DepartamentosJWT = data[0].Departamentos
 
 	//Cargando variables al objeto
 	JwtResp = append(JwtResp, jwt)
@@ -157,7 +187,6 @@ func ReadPyloadJWT(tokenString string) jwt.MapClaims {
 		fmt.Println("Error validate jwt " + err.Error())
 	}
 	claims, _ := token.Claims.(jwt.MapClaims)
-
 	return claims
 
 }

@@ -310,7 +310,6 @@ func MdlNewDocSistema(IdIngGeneral int, IdUserInt int, spExecute string, Ruta st
 		respSQL = append(respSQL, resp)
 		//	names = append(names, id)
 	}
-
 	return respSQL
 }
 
